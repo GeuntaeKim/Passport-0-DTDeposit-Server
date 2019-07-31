@@ -48,6 +48,11 @@ exports.delete = function (req, res) {
     post(req, res, method);
 }
 
+exports.findByCardNumber = function (req, res) {
+    method = "findByCardNumber";
+    post(req, res, method);
+}
+
 function post(req, res, method) {
     var postData = Object.keys(req.query).length !== 0 ? req.query : Object.keys(req.body).length !== 0 ? req.body : null;
     var response;

@@ -22,10 +22,15 @@ app.use(express.urlencoded());
 app.use(express.methodOverride());
 
 app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-    res.setHeader('Access-Control-Allow-Credentials', true);
+    //res.setHeader('Access-Control-Allow-Origin', '*');
+    //res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    //res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    //res.setHeader('Access-Control-Allow-Credentials', true);
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Headers", "*");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+    //res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers")
     next();
 });
 
@@ -45,7 +50,7 @@ if ('development' == app.get('env')) {
 }
 
 //cors
-var whitelist = ['http://localhost:4200', 'http://153.71.108.86:4200'];
+var whitelist = ['http://localhost:4200', 'http://153.71.108.86:4200','http://localhost:8080', 'http://153.71.108.86:8080']; 
 var corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
@@ -97,6 +102,7 @@ app.get('/cards/:id', cards.list);
 app.post('/cards/add', cards.add);
 app.post('/cards/update', cards.update);
 app.post('/cards/delete', cards.delete);
+app.post('/cards/findByCardNumber', cards.findByCardNumber);
 
 app.get('/deposits', deposits.list);
 app.get('/deposits/:id', deposits.list);
@@ -109,6 +115,7 @@ app.get('/items/:id', items.list);
 app.post('/items/add', items.add);
 app.post('/items/update', items.update);
 app.post('/items/delete', items.delete);
+app.post('/items/image', items.image);
 
 app.use(app.router);
 

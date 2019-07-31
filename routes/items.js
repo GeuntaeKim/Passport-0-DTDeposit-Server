@@ -17,37 +17,16 @@ exports.list = function (req, res) {
         .then(function () {
             if (itemId) {
                 return db.Items.findAll({
-                    attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
+                    attributes: { exclude: ['frontImage','rearImage','createdAt', 'updatedAt', 'deletedAt'] },
                     where: { id: itemId }
                 }); //if id is present
             } else {
-                return db.Items.findAll({ attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] } });
+                return db.Items.findAll({ attributes: { exclude: ['frontImage','rearImage','createdAt', 'updatedAt', 'deletedAt'] } });
             }
         })
         .then(function (items) {
             if (items) {
-                console.log(items);
-                res.json(items[0].frontImage);
-                console.log('item[0]');
-                console.log(items[0]);
-                console.log('items[0].frontImage');
-                console.log(items[0].frontImage);
-                var reader = new FileReader();
-                //reader.readAsBinaryString(items[0].frontImage);
-                //reader.readAsArrayBuffer(items[0].frontImage);
-                var data = [];
-                reader.on('data', function(chunk) {
-                    data.push(chunk);
-                    console.log("size" + data.length);
-                })
-                //reader.addEventListener('load', function(ev) {
-                //    console.log("size" + ev.target.result.length);
-                //s})
-                reader.onloadend = function() {
-                    base64data = datas;
-                    console.log('Base64');
-                    console.log(base64data);
-                }
+                res.json(items);
             }
         })
         .catch(function (err) {
@@ -70,11 +49,63 @@ exports.delete = function (req, res) {
     post(req, res, method);
 }
 
+exports.image = function (req, res) {
+    method = "getImage";
+    post(req, res, method);
+}
+
+function sleep(ms){
+    return new Promise(resolve=>{
+        setTimeout(resolve,ms)
+    })
+}
+
 function post(req, res, method) {
     var postData = Object.keys(req.query).length !== 0 ? req.query : Object.keys(req.body).length !== 0 ? req.body : null;
     var response;
 
-    if (method == "saveItem") {
+    if (method == "getImage") {
+        response = {};
+        Promise.resolve()
+            .then(function () {
+                console.log(postData);
+                return db.Items.findAll({
+                    attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
+                    where: { id: postData.id }
+                }); //if id is present
+            })
+            .then(async function (items) {
+                if (items) {
+                    await sleep(2000);
+                    console.log(items);
+                    res.json(items[0].frontImage);
+                    console.log('item[0]');
+                    console.log(items[0]);
+                    console.log('items[0].frontImage');
+                    console.log(items[0].frontImage);
+                    var reader = new FileReader();
+                    //reader.readAsBinaryString(items[0].frontImage);
+                    //reader.readAsArrayBuffer(items[0].frontImage);
+                    var data = [];
+                    reader.on('data', function(chunk) {
+                        data.push(chunk);
+                        console.log("size" + data.length);
+                    })
+                    //reader.addEventListener('load', function(ev) {
+                    //    console.log("size" + ev.target.result.length);
+                    //s})
+                    reader.onloadend = function() {
+                        base64data = datas;
+                        console.log('Base64');
+                        console.log(base64data);
+                    }
+                }
+            })
+            .catch(function (err) {
+                console.log("Error at Item get request" + err);
+            })
+    }
+    else if (method == "saveItem") {
         response = {};
 
         // building json for insert

@@ -82,7 +82,7 @@ function post(req, res, method) {
             amount: postData.amount,
             locationId: postData.locationId,
             accountId: postData.accountId,
-            status: 0,
+            status: postData.status,
             cardId: postData.cardId,
             createdAt: new Date(),
             updatedAt: new Date()
